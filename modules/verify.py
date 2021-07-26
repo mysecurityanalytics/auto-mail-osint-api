@@ -24,10 +24,10 @@ class Verify:
                 return True
             else:
                 return False
-        except:
-            return False
+        except Exception as e:
+            return 0
 
-    async def check_smtp(self):
+    async def check_smtp(self, port):
         import dns.resolver
         import smtplib
         import socket
@@ -36,12 +36,18 @@ class Verify:
         try:
             result = dns.resolver.resolve(domain, "MX")
             socket.setdefaulttimeout(2)
-            with smtplib.SMTP_SSL(str(result[0].exchange), 465) as server:
-                server.ehlo()
-                server.quit()
-            return True
+            if port == 465:
+                with smtplib.SMTP_SSL(str(result[0].exchange), port) as server:
+                    server.ehlo()
+                    server.quit()
+                return True
+            else:
+                with smtplib.SMTP(str(result[0].exchange), port) as server:
+                    server.ehlo()
+                    server.quit()
+                return True
         except:
-            with open('modules/domains.txt') as f:
+            with open("modules/domains.txt") as f:
                 if domain in f.read():
                     return True
                 else:
