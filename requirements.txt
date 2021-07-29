@@ -4,3 +4,4 @@ dnspython==2.1.0
 fastapi==0.67.0
 PyJWT==2.1.0
 bcrypt==3.2.0
+uvicorn==0.13.4
