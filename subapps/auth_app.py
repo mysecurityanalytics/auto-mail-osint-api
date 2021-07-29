@@ -2,11 +2,12 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pymongo, bcrypt, jwt
 from modules.verify import Verify
+import os
 
-
-client = pymongo.MongoClient("")
+db_url = os.environ.get("DATABASE_URL")
+client = pymongo.MongoClient(db_url)
 db = client.test
-users_col = db[""]
+users_col = db["users"]
 
 
 class user(BaseModel):
@@ -14,7 +15,7 @@ class user(BaseModel):
     password: str
 
 
-jwt_secret = ""
+jwt_secret = str(os.environ.get("JWT_SECRET"))
 
 
 auth = FastAPI(openapi_prefix="/auth")

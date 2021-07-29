@@ -2,10 +2,11 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 import jwt
 from modules.verify import Verify
+import os
 
 verify = FastAPI(openapi_prefix="/verify")
 
-jwt_secret = ""
+jwt_secret = os.environ.get("JWT_SECRET")
 
 
 @verify.middleware("http")
