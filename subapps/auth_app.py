@@ -7,7 +7,8 @@ import os
 db_url = os.environ.get("DATABASE_URL")
 client = pymongo.MongoClient(db_url)
 db = client.test
-users_col = db["users"]
+db_collection = os.environ.get("DB_COLLECTION")
+users_col = db[db_collection]
 
 
 class user(BaseModel):
