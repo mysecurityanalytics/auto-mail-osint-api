@@ -2,7 +2,6 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pymongo, bcrypt, jwt, os
 from modules.verify import Verify
-from fastapi.middleware.cors import CORSMiddleware
 
 db_url = os.environ.get("DATABASE_URL")
 client = pymongo.MongoClient(db_url)
@@ -19,15 +18,6 @@ jwt_secret = str(os.environ.get("JWT_SECRET"))
 
 
 auth = FastAPI(openapi_prefix="/auth")
-
-auth.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
 
 @auth.post("/login/")
 async def login(user: user):
