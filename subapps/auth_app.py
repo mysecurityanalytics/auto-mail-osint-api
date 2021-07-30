@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import pymongo, bcrypt, jwt
+import pymongo, bcrypt, jwt, os
 from modules.verify import Verify
-import os
 
 db_url = os.environ.get("DATABASE_URL")
 client = pymongo.MongoClient(db_url)
@@ -19,7 +18,6 @@ jwt_secret = str(os.environ.get("JWT_SECRET"))
 
 
 auth = FastAPI(openapi_prefix="/auth")
-
 
 @auth.post("/login/")
 async def login(user: user):
