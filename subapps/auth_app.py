@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pymongo, bcrypt, jwt, os
 from modules.verify import Verify
+from fastapi.responses import JSONResponse
 
 db_url = os.environ.get("DATABASE_URL")
 client = pymongo.MongoClient(db_url)
@@ -19,11 +20,15 @@ jwt_secret = str(os.environ.get("JWT_SECRET"))
 
 auth = FastAPI(openapi_prefix="/auth")
 
+
 @auth.post("/login/")
 async def login(user: user):
     e = await Verify(user.email).check_regex()
     if not e:
-        return {"status": "failed", "message": "Wrong email format!"}
+        return JSONResponse(
+            status_code=400,
+            content={"status": "failed", "message": "Wrong email format!"},
+        )
     check = {"email": user.email}
     if users_col.count_documents(check):
         data = users_col.find_one({"email": user.email})
@@ -33,19 +38,34 @@ async def login(user: user):
             token = jwt.encode({"email": user.email}, jwt_secret, algorithm="HS256")
             return {"status": "success", "token": token}
         else:
-            return {"status": "failed", "message": "Incorrect username or password!"}
+            return JSONResponse(
+                status_code=401,
+                content={
+                    "status": "failed",
+                    "message": "Incorrect username or password!",
+                },
+            )
     else:
-        return {"status": "failed", "message": "Incorrect username or password!"}
+        return JSONResponse(
+            status_code=401,
+            content={"status": "failed", "message": "Incorrect username or password!"},
+        )
 
 
 @auth.post("/register/")
 async def register(user: user):
     e = await Verify(user.email).check_regex()
     if not e:
-        return {"status": "failed", "message": "Wrong email format!"}
+        return JSONResponse(
+            status_code=400,
+            content={"status": "failed", "message": "Wrong email format!"},
+        )
     check = {"email": user.email}
     if users_col.count_documents(check):
-        return {"status": "failed", "message": "Email already taken!"}
+        return JSONResponse(
+            status_code=409,
+            content={"status": "failed", "message": "Email already taken!"},
+        )
     else:
         bcrypt_pass = str.encode(user.password)
         hashed = bcrypt.hashpw(bcrypt_pass, bcrypt.gensalt())
