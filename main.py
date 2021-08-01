@@ -1,6 +1,7 @@
 from fastapi import FastAPI
-from subapps.verify_app import verify
 from subapps.auth_app import auth
+from subapps.verify_app import verify
+from subapps.scan_app import scan
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -11,8 +12,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.mount("/verify", verify)
 app.mount("/auth", auth)
+app.mount("/verify", verify)
+app.mount("/scan", scan)
 
 
 @app.get("/")

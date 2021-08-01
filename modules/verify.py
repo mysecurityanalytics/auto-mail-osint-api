@@ -4,7 +4,7 @@ class Verify:
 
     async def check_regex(self):
         import re
-        
+
         EMAIL_REGEX = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
         if not re.match(EMAIL_REGEX, self.email):
             return False
