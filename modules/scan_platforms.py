@@ -17,11 +17,12 @@ class Scan_Platforms:
             ]
             results = sync_execute_queries(query, platforms)
             for result in results:
-                if result.success:
-                    if result.valid:
-                        if not result.available:
-                            plaform_list.append(str(result.platform))
-
+                if (
+                    result.success == True
+                    and result.valid == True
+                    and result.available == False
+                ):
+                    plaform_list.append(str(result.platform))
             return plaform_list
         except:
             return 0
@@ -30,7 +31,6 @@ class Scan_Platforms:
     async def scan_mailbox_providers(self):
         domain = self.email.split("@")[1]
         try:
-
             if domain == "yaani.com":
                 import requests
 
@@ -49,7 +49,23 @@ class Scan_Platforms:
                     return False
                 else:
                     return True
+            elif domain == "gmail.com" or domain == "protonmail.com":
+                import httpx
+
+                email = self.email
+                out = []
+                client = httpx.AsyncClient()
+                if domain == "gmail.com":
+                    from holehe.modules.mails.google import google
+
+                    await google(email, client, out)
+                if domain == "protonmail.com":
+                    from holehe.modules.mails.protonmail import protonmail
+
+                    await protonmail(email, client, out)
+                await client.aclose()
+                return out[0]["exists"]
             else:
-                return 1
+                return None
         except:
             return 0

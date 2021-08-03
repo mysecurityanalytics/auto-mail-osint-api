@@ -7,3 +7,5 @@ bcrypt==3.2.0
 uvicorn==0.13.4
 requests==2.22.0
 socialscan==1.4.2
+holehe==1.60
+httpx==0.16.0

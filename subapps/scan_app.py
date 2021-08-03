@@ -50,6 +50,6 @@ async def scan_mailbox_providers(email: str):
     e = await Scan_Platforms(email).scan_mailbox_providers()
     if e == 0:
         raise HTTPException(status_code=500, detail="System error!")
-    if e == 1:
+    if e == None:
         raise HTTPException(status_code=404, detail="Domain not found!")
     return {"email": email, "mailbox provider": e}
