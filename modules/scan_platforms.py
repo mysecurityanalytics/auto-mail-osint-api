@@ -1,11 +1,16 @@
+from socialscan.util import Platforms, sync_execute_queries
+import requests
+import httpx
+from holehe.modules.mails.google import google
+from holehe.modules.mails.protonmail import protonmail
+
+
 class Scan_Platforms:
     def __init__(self, email):
         self.email = email
 
     def scan_social(self):
         try:
-
-            from socialscan.util import Platforms, sync_execute_queries
 
             plaform_list = []
             query = [self.email]
@@ -32,7 +37,6 @@ class Scan_Platforms:
         domain = self.email.split("@")[1]
         try:
             if domain == "yaani.com":
-                import requests
 
                 url = "https://api.yaanimail.com/gateway/v1/accounts/check-email"
                 myobj = '{"email":"' + self.email + '"}'
@@ -50,17 +54,14 @@ class Scan_Platforms:
                 else:
                     return True
             elif domain == "gmail.com" or domain == "protonmail.com":
-                import httpx
 
                 email = self.email
                 out = []
                 client = httpx.AsyncClient()
                 if domain == "gmail.com":
-                    from holehe.modules.mails.google import google
 
                     await google(email, client, out)
                 if domain == "protonmail.com":
-                    from holehe.modules.mails.protonmail import protonmail
 
                     await protonmail(email, client, out)
                 await client.aclose()
