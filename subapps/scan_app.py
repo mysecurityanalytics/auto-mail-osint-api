@@ -11,17 +11,19 @@ jwt_secret = os.environ.get("JWT_SECRET")
 
 @scan.middleware("http")
 async def auth_middleware(request: Request, call_next):
-    response = await call_next(request)
-    headers = response.headers
-    if "jwt_token" in headers:
-        token = response.headers["jwt_token"]
+    headers = request.headers
+    if "Authorization" in headers:
+        token = request.headers["Authorization"].split(" ")[-1]
+        print(token)
         try:
             data = jwt.decode(token, jwt_secret, algorithms=["HS256"])
+            print(data)
+            response = await call_next(request)
             return response
         except:
             return JSONResponse(status_code=403)
-        else:
-            return JSONResponse(status_code=403)
+    else:
+        return JSONResponse(status_code=403)
 
 
 @scan.get("/social/{email}")
