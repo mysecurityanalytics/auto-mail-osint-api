@@ -17,13 +17,13 @@ async def auth_middleware(request: Request, call_next):
         print(token)
         try:
             data = jwt.decode(token, jwt_secret, algorithms=["HS256"])
-            print(data)
-            response = await call_next(request)
-            return response
         except:
             return JSONResponse(status_code=403)
     else:
         return JSONResponse(status_code=403)
+    
+    response = await call_next(request)
+    return response
 
 
 @scan.get("/social/{email}")

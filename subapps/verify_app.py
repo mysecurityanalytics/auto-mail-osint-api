@@ -14,14 +14,16 @@ async def auth_middleware(request: Request, call_next):
     headers = request.headers
     if "Authorization" in headers:
         token = request.headers["Authorization"].split(" ")[-1]
+        print(token)
         try:
             data = jwt.decode(token, jwt_secret, algorithms=["HS256"])
-            response = await call_next(request)
-            return response
         except:
             return JSONResponse(status_code=403)
     else:
         return JSONResponse(status_code=403)
+    
+    response = await call_next(request)
+    return response
 
 
 @verify.get("/format/{email}")
@@ -52,11 +54,15 @@ async def check_smtp_exist(email: str):
 
 @verify.get("/all/{email}")
 async def verify_all(email: str):
-
     e = Verify(email)
+    ports = [25, 465, 587, 2525]
+    for x in range(len(ports)):
+        is_smtp_open = await Verify(email).check_smtp(ports[x])
+        if is_smtp_open:
+            break
     return {
         "email": email,
         "format": await e.check_regex(),
         "mailbox": await e.check_mailbox(),
-        "smtp": await e.check_smtp(),
+        "smtp": is_smtp_open,
     }
