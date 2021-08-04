@@ -1,10 +1,15 @@
+import re
+import dns.resolver
+import smtplib
+import socket
+
+
 class Verify:
     def __init__(self, email):
         self.email = email
 
     async def check_regex(self):
-        import re
-        
+
         EMAIL_REGEX = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
         if not re.match(EMAIL_REGEX, self.email):
             return False
@@ -12,7 +17,6 @@ class Verify:
             return True
 
     async def check_mailbox(self):
-        import dns.resolver
 
         domain = self.email.split("@")[1]
         try:
@@ -28,9 +32,6 @@ class Verify:
             return 0
 
     async def check_smtp(self, port):
-        import dns.resolver
-        import smtplib
-        import socket
 
         domain = self.email.split("@")[1]
         try:
