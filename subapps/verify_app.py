@@ -3,6 +3,14 @@ from fastapi.responses import JSONResponse
 import jwt
 from modules.verify import Verify
 import os
+import pymongo
+import time
+import re
+
+db_url = os.environ.get("DATABASE_URL")
+client = pymongo.MongoClient(db_url)
+db = os.environ.get("DB_NAME")
+logs_col = client[db]["logs"]
 
 verify = FastAPI(openapi_prefix="/verify")
 
@@ -21,8 +29,14 @@ async def auth_middleware(request: Request, call_next):
             return JSONResponse(status_code=403)
     else:
         return JSONResponse(status_code=403)
-    
+
     response = await call_next(request)
+    user = str(data["email"])
+    url = str(request.url)
+    checked_email = re.findall("([^\/]+$)", url)
+    ts = int(time.time())
+    db_data = {"user": user, "checked_email": str(checked_email[0]), "timestamp": ts}
+    logs_col.insert_one(db_data)
     return response
 
 

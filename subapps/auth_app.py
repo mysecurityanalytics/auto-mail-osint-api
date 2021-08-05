@@ -3,11 +3,13 @@ from pydantic import BaseModel
 import pymongo, bcrypt, jwt, os
 from modules.verify import Verify
 from fastapi.responses import JSONResponse
+import time
 
 db_url = os.environ.get("DATABASE_URL")
 client = pymongo.MongoClient(db_url)
 db = os.environ.get("DB_NAME")
 users_col = client[db]["users"]
+login_logs_col = client[db]["login_logs"]
 
 
 class user(BaseModel):
@@ -36,8 +38,24 @@ async def login(user: user):
         hashed = data["password"]
         if bcrypt.checkpw(bcrypt_pass, hashed):
             token = jwt.encode({"email": user.email}, jwt_secret, algorithm="HS256")
+            ts = int(time.time())
+            db_data = {
+                "user": user.email,
+                "action": "login",
+                "action detail": "login successful",
+                "timestamp": ts,
+            }
+            login_logs_col.insert_one(db_data)
             return {"status": "success", "token": token}
         else:
+            ts = int(time.time())
+            db_data = {
+                "user": user.email,
+                "action": "login",
+                "action detail": "wrong password attempt",
+                "timestamp": ts,
+            }
+            login_logs_col.insert_one(db_data)
             return JSONResponse(
                 status_code=401,
                 content={
@@ -71,4 +89,12 @@ async def register(user: user):
         hashed = bcrypt.hashpw(bcrypt_pass, bcrypt.gensalt())
         q = {"email": user.email, "password": hashed}
         x = users_col.insert_one(q)
+        ts = int(time.time())
+        db_data = {
+            "user": user.email,
+            "action": "register",
+            "action detail": "register successful",
+            "timestamp": ts,
+        }
+        login_logs_col.insert_one(db_data)
         return {"status": "success", "message": "Success!"}
