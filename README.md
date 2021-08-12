@@ -1,6 +1,6 @@
 # **Auto Mail OSINT - API**
 
-![Logo](https://github.com/mysecurityanalytics/auto-mail-osint-web/blob/main/src/screenshots/readme-login.png?raw=true)
+![Logo](https://raw.githubusercontent.com/mysecurityanalytics/auto-mail-osint-web/main/src/assets/screenshots/readme-login.png?token=ALZKPIP2RRQL5JAN3CQEGO3BCTGDU)
 
 This is an open source project that developed by [Alp Keskin](https://github.com/alpkeskin) and [Davut Kulaksız](https://github.com/davutkulaksiz) within the scope of **My Security Analytics 2021 Summer Internship Program**. This repository is the API part of this project.
 
