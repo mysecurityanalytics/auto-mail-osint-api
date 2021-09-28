@@ -2,7 +2,9 @@
 
 ![Logo](./logo.png)
 
-This is an open source project that developed by [Alp Keskin](https://github.com/alpkeskin) and [Davut Kulaksız](https://github.com/davutkulaksiz) within the scope of **My Security Analytics 2021 Summer Internship Program**. This repository is the API part of this project.
+This is an open source project that developed by [Alp Keskin](https://github.com/alpkeskin) and [Davut Kulaksız](https://github.com/davutkulaksiz) within the scope of <b>My Security Analytics 2021 Summer Internship Program</b> which supervised by [Çalgan Aygün](https://github.com/calganaygun).
+
+<i>This repository is the API part of this project.</i>
 
 To learn more about the front-end part, check out the [WEB Repository](https://github.com/mysecurityanalytics/auto-mail-osint-web).
 
@@ -26,22 +28,14 @@ To learn more about the front-end part, check out the [WEB Repository](https://g
 - [MongoDB](https://www.mongodb.com/) used to save users login data and save their searching logs.
 
 
-
-
-
-
-
-
-
-
-
-
 ## Installation
 
-Install API repo with git.
+Clone API repo and install dependencies.
 
 ```
   git clone https://github.com/mysecurityanalytics/auto-mail-osint-api.git
+  cd auto-mail-osint-api
+  pip install -r requirements.txt
 ```
 
 Set environment variables.
@@ -55,7 +49,6 @@ Set environment variables.
 ## Run
 
 ```
-  cd auto-mail-osint-api
   uvicorn main:app --reload
 ```
 
