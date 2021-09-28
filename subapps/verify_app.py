@@ -7,7 +7,7 @@ import pymongo
 import time
 import re
 
-db_url = os.environ.get("DATABASE_URL")
+db_url = os.environ.get("MONGO_URI")
 client = pymongo.MongoClient(db_url)
 db = os.environ.get("DB_NAME")
 logs_col = client[db]["logs"]

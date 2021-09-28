@@ -5,7 +5,7 @@ from modules.verify import Verify
 from fastapi.responses import JSONResponse
 import time
 
-db_url = os.environ.get("DATABASE_URL")
+db_url = os.environ.get("MONGO_URI")
 client = pymongo.MongoClient(db_url)
 db = os.environ.get("DB_NAME")
 users_col = client[db]["users"]
