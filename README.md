@@ -47,7 +47,7 @@ Install API repo with git.
 Set environment variables.
 
 ```
-  export DATABASE_URL=''
+  export MONGO_URI=''
   export DB_NAME=''
   export JWT_SECRET=''
 ```
